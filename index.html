@@ -3,368 +3,744 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Massage Tracker ✨</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Massage Tracker</title>
+
 <style>
 :root {
-  --bg:#0b1020; --panel:#141c30; --panel2:#1b2740;
-  --text:#eef3ff; --muted:#a7b4cf;
-  --purple:#8b5cf6; --cyan:#22d3ee;
-  --red:#fb7185; --green:#34d399;
+  --bg: #090d18;
+  --panel: #121a2b;
+  --panel2: #182238;
+  --text: #f4f6ff;
+  --muted: #9ca9c5;
+  --purple: #9270ff;
+  --cyan: #50e4e8;
+  --green: #57e39b;
+  --red: #ff7085;
+  --border: #293550;
 }
-* { box-sizing:border-box; }
+
+* { box-sizing: border-box; }
+
 body {
-  margin:0; font-family:system-ui,Arial,sans-serif;
-  background:radial-gradient(ellipse at top,#202b50,var(--bg) 65%);
-  color:var(--text); min-height:100vh;
+  margin: 0;
+  background:
+    radial-gradient(ellipse at top left, #24204d 0%, transparent 42%),
+    var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
 }
-main { width:min(1000px,94%); margin:auto; padding:28px 0 48px; }
-header { margin-bottom:22px; }
-.eyebrow { color:var(--cyan); text-transform:uppercase; letter-spacing:.16em; font-size:.75rem; font-weight:800; }
-h1 { margin:.3rem 0; font-size:clamp(2rem,6vw,3.3rem); }
-p { color:var(--muted); }
-.grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
-.panel,.stat {
-  background:linear-gradient(145deg,var(--panel2),var(--panel));
-  border:1px solid #34415f; border-radius:18px; padding:18px;
-  box-shadow:0 12px 32px #0002;
+
+.container {
+  width: min(100% - 28px, 1000px);
+  margin: auto;
+  padding: 35px 0 50px;
 }
-.stat small { color:var(--muted); font-weight:700; }
-.num { font-size:clamp(1.7rem,4vw,2.5rem); font-weight:850; margin-top:8px; overflow-wrap:anywhere; }
-.unit { font-size:.9rem; color:var(--muted); }
-.content { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px; }
-h2 { margin:0 0 12px; font-size:1.15rem; }
-label { display:block; font-size:.9rem; color:var(--muted); margin:12px 0 6px; }
-input,select,button { font:inherit; }
-input,select {
-  width:100%; padding:12px; border-radius:10px;
-  border:1px solid #465474; background:#0c1427; color:var(--text);
+
+header { margin-bottom: 28px; }
+
+.eyebrow {
+  color: var(--cyan);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
 }
-.buttons { display:flex; gap:9px; flex-wrap:wrap; margin-top:14px; }
+
+h1 {
+  font-size: clamp(30px, 6vw, 44px);
+  margin: 10px 0;
+  letter-spacing: -1.5px;
+}
+
+.subtitle {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.card {
+  background: linear-gradient(145deg, var(--panel2), var(--panel));
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px;
+  min-width: 0;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.stat-value {
+  font-size: clamp(25px, 5vw, 36px);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.purple { color: var(--purple); }
+.cyan { color: var(--cyan); }
+.green { color: var(--green); }
+
+.section {
+  margin-top: 18px;
+}
+
+.section h2 {
+  font-size: 19px;
+  margin: 0 0 8px;
+}
+
+.section p {
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 13px;
+}
+
+label {
+  display: block;
+  color: #dbe3f8;
+  font-size: 13px;
+  margin: 16px 0 8px;
+}
+
+input, select {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 11px;
+  border: 1px solid var(--border);
+  background: #0c1322;
+  color: white;
+  font-size: 16px;
+  outline: none;
+}
+
+input:focus, select:focus {
+  border-color: var(--purple);
+}
+
 button {
-  border:0; border-radius:10px; padding:11px 14px;
-  font-weight:800; cursor:pointer; background:var(--purple); color:white;
+  border: 0;
+  border-radius: 11px;
+  padding: 13px 16px;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform .15s, opacity .15s;
 }
-button:hover { filter:brightness(1.1); }
-button.secondary { background:#33415f; }
-button.danger { background:#9f2945; }
-button.good { background:#087f69; }
-button:disabled { opacity:.45; cursor:not-allowed; }
-.progress { height:10px; background:#0b1222; border-radius:99px; overflow:hidden; margin:12px 0 6px; border:1px solid #34415f; }
-.bar { height:100%; width:0; background:linear-gradient(90deg,var(--purple),var(--cyan)); transition:width .2s; }
-.history { margin-top:14px; }
-.history-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px solid #303c57; }
-.history-row:last-child { border-bottom:0; }
-.history-row strong { display:block; }
-.history-row small { color:var(--muted); }
-.amount { text-align:right; white-space:nowrap; font-weight:800; }
-.plus { color:var(--green); } .minus { color:var(--red); }
-.tiny { font-size:.82rem; }
-.notice { border:1px solid #3b4c70; background:#10192d; padding:12px 14px; border-radius:12px; margin-top:14px; color:var(--muted); }
-.empty { color:var(--muted); padding:14px 0; }
-@media(max-width:700px) {
-  .grid { grid-template-columns:1fr 1fr; }
-  .content { grid-template-columns:1fr; }
-  .grid .stat:last-child { grid-column:1/-1; }
+
+button:hover { transform: translateY(-1px); }
+button:active { transform: translateY(0); }
+button:disabled { opacity: .45; cursor: not-allowed; }
+
+.primary {
+  color: #fff;
+  background: linear-gradient(100deg, #7858f5, #a16bff);
+}
+
+.secondary {
+  color: var(--text);
+  background: #25314b;
+  border: 1px solid #344361;
+}
+
+.danger {
+  color: #ff9aaa;
+  background: #351c2a;
+  border: 1px solid #663044;
+}
+
+.full { width: 100%; margin-top: 16px; }
+
+.progress-track {
+  height: 10px;
+  background: #080e1a;
+  border-radius: 99px;
+  overflow: hidden;
+  margin: 14px 0 9px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--purple), var(--cyan));
+  border-radius: 99px;
+  transition: width .25s;
+}
+
+.progress-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.result {
+  background: #0b1321;
+  border: 1px solid var(--border);
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 16px;
+  line-height: 1.9;
+  font-size: 14px;
+}
+
+.result strong { color: var(--cyan); }
+
+.history-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+  border-radius: 12px;
+  background: #0c1423;
+  border: 1px solid var(--border);
+}
+
+.history-item p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.history-amount {
+  text-align: right;
+  white-space: nowrap;
+  font-weight: 800;
+}
+
+.empty {
+  color: var(--muted);
+  text-align: center;
+  padding: 25px 10px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.actions button { flex: 1; }
+
+.note {
+  border-left: 3px solid var(--cyan);
+  padding: 10px 13px;
+  background: #10202a;
+  color: #c5e9ef;
+  border-radius: 0 10px 10px 0;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 15px;
+}
+
+footer {
+  color: #697895;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 28px;
+  line-height: 1.7;
+}
+
+@media (max-width: 650px) {
+  .grid { grid-template-columns: 1fr; }
+  .card { padding: 18px; }
+  .container { padding-top: 24px; }
 }
 </style>
 </head>
+
 <body>
-<main>
-<header>
-  <div class="eyebrow">Personal tracker</div>
-  <h1>Massage Tracker ✨</h1>
-  <p>Track massage minutes, money earned, points, and free minutes.</p>
-</header>
+<div class="container">
 
-<section class="grid">
-  <div class="stat">
-    <small>AVAILABLE POINTS</small>
-    <div class="num" id="points">0</div>
-    <div class="unit">1 point = 1 free minute</div>
-  </div>
-  <div class="stat">
-    <small>MONEY EARNED</small>
-    <div class="num" id="money">$0</div>
-    <div class="unit">$1 per massage minute</div>
-  </div>
-  <div class="stat">
-    <small>FREE MINUTES REDEEMED</small>
-    <div class="num" id="redeemed">0 <span class="unit">min</span></div>
-  </div>
-</section>
-
-<section class="content">
-  <div class="panel">
-    <h2>➕ Add a massage</h2>
-    <label for="addMinutes">Massage minutes</label>
-    <input id="addMinutes" type="number" min="1" step="1" value="5">
-    <div class="buttons">
-      <button id="addBtn">Add minutes</button>
+  <header>
+    <div class="eyebrow">Personal dashboard</div>
+    <h1>Massage Tracker <span class="purple">✦</span></h1>
+    <div class="subtitle">
+      Track massage minutes, money earned, reward points, and free minutes.
     </div>
-    <div class="notice tiny">
-      Earn $1 per minute and 1 point for every 5 total massage minutes.
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <div class="stat-label">💵 MONEY EARNED</div>
+      <div class="stat-value green" id="money">$0</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-label">⭐ AVAILABLE POINTS</div>
+      <div class="stat-value purple" id="points">0</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-label">⏱️ PAID MINUTES</div>
+      <div class="stat-value cyan" id="paidMinutes">0</div>
     </div>
   </div>
 
-  <div class="panel">
-    <h2>🎁 Redeem points</h2>
-    <label for="redeemPoints">Points to redeem</label>
-    <input id="redeemPoints" type="number" min="1" step="1" value="1">
-    <div class="buttons">
-      <button class="good" id="redeemBtn">Redeem for free minutes</button>
+  <div class="grid section">
+    <div class="card">
+      <div class="stat-label">FREE MINUTES REDEEMED</div>
+      <div class="stat-value" id="freeMinutes">0</div>
     </div>
-    <p class="tiny">Each point gives 1 free minute. Redeeming points doesn't change money earned.</p>
+
+    <div class="card">
+      <div class="stat-label">TOTAL MASSAGE MINUTES</div>
+      <div class="stat-value" id="totalMinutes">0</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-label">MINUTES UNTIL NEXT POINT</div>
+      <div class="stat-value cyan" id="untilPoint">5</div>
+    </div>
   </div>
-</section>
 
-<section class="panel" style="margin-top:14px">
-  <h2>⭐ Progress to your next point</h2>
-  <strong id="progressText">0 / 5 minutes</strong>
-  <div class="progress"><div class="bar" id="bar"></div></div>
-  <p class="tiny">Every 5 massage minutes earns 1 point. Progress carries over between massages.</p>
-</section>
+  <div class="card section">
+    <h2>⭐ Reward progress</h2>
+    <p>Every 5 paid massage minutes earns 1 point. Every point gives 1 free minute.</p>
 
-<section class="panel history">
-  <h2>📜 Activity history</h2>
-  <div class="buttons" style="margin-top:0;margin-bottom:8px">
-    <button class="secondary" id="undoBtn">Undo last change</button>
-    <button class="secondary" id="exportBtn">Export backup</button>
-    <button class="secondary" id="importBtn">Import backup</button>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="progress-caption">
+      <span id="progressText">0 of 5 minutes</span>
+      <span>1 point = 1 free minute</span>
+    </div>
+  </div>
+
+  <div class="card section">
+    <h2>➕ Record a massage</h2>
+    <p>
+      Enter the full massage length. You can use points to cover some of the
+      minutes, and only the remaining paid minutes earn money.
+    </p>
+
+    <label for="massageLength">Total massage length (minutes)</label>
+    <input id="massageLength" type="number" min="1" step="1" placeholder="Example: 10">
+
+    <label for="pointsToUse">Points to use for free minutes</label>
+    <input id="pointsToUse" type="number" min="0" step="1" value="0">
+
+    <div class="result" id="preview">
+      Enter a massage length to see the breakdown.
+    </div>
+
+    <button class="primary full" id="addMassage">Save massage</button>
+
+    <div class="note">
+      Example: A 10-minute massage using 5 points gives 5 free minutes and
+      5 paid minutes. You earn $5, spend 5 points, and earn reward points
+      based on the 5 paid minutes.
+    </div>
+  </div>
+
+  <div class="card section">
+    <h2>📜 Massage history</h2>
+    <p>Your latest activity appears here.</p>
+
+    <div id="history" class="history-list">
+      <div class="empty">No massages recorded yet.</div>
+    </div>
+
+    <div class="actions">
+      <button class="secondary" id="undoBtn">↩ Undo last massage</button>
+      <button class="secondary" id="exportBtn">⬇ Export backup</button>
+      <button class="secondary" id="importBtn">⬆ Import backup</button>
+    </div>
+
     <input id="importFile" type="file" accept=".json,application/json" hidden>
-    <button class="danger" id="clearBtn">Reset tracker</button>
-  </div>
-  <div id="history"><div class="empty">No activity yet!</div></div>
-</section>
 
-<p class="notice tiny">
-  Your data saves in this browser. Export a backup to keep a copy.
-  It won't automatically sync to another device.
-</p>
-</main>
+    <div class="actions">
+      <button class="danger" id="resetBtn">Reset all data</button>
+    </div>
+  </div>
+
+  <footer>
+    Massage Tracker · Automatically saves in this browser<br>
+    Export a backup regularly if you want to protect your data.
+  </footer>
+
+</div>
 
 <script>
 (() => {
-  const KEY = "massageTrackerComplete_v1";
+  "use strict";
 
-  let state = {
-    paidMinutes: 0,
+  const STORAGE_KEY = "massageTrackerComplete_v2";
+
+  const defaultState = {
     money: 0,
+    paidMinutes: 0,
+    freeMinutes: 0,
     points: 0,
     pointProgress: 0,
-    redeemed: 0,
     history: [],
     undoStack: []
   };
 
-  try {
-    const saved = JSON.parse(localStorage.getItem(KEY) || "null");
-    if (saved &&
-        Number.isSafeInteger(saved.paidMinutes) &&
-        Number.isFinite(saved.money) &&
-        Number.isSafeInteger(saved.points) &&
-        Number.isSafeInteger(saved.pointProgress) &&
-        Number.isSafeInteger(saved.redeemed) &&
-        Array.isArray(saved.history)) {
-      state = { ...state, ...saved, undoStack: [] };
+  let state = loadState();
+
+  function loadState() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return structuredClone(defaultState);
+
+      const parsed = JSON.parse(saved);
+
+      return {
+        ...structuredClone(defaultState),
+        ...parsed,
+        history: Array.isArray(parsed.history) ? parsed.history : [],
+        undoStack: Array.isArray(parsed.undoStack) ? parsed.undoStack : []
+      };
+    } catch {
+      return structuredClone(defaultState);
     }
-  } catch (e) {}
-
-  const $ = id => document.getElementById(id);
-
-  function save() {
-    const { undoStack, ...data } = state;
-    localStorage.setItem(KEY, JSON.stringify(data));
   }
 
-  function snapshot() {
-    return {
-      paidMinutes: state.paidMinutes,
-      money: state.money,
-      points: state.points,
-      pointProgress: state.pointProgress,
-      redeemed: state.redeemed,
-      history: [...state.history]
-    };
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
 
-  function remember() {
-    state.undoStack.push(snapshot());
-    if (state.undoStack.length > 50) state.undoStack.shift();
+  function $(id) {
+    return document.getElementById(id);
   }
 
-  function log(title, detail, amount, kind) {
-    state.history.unshift({
-      title, detail, amount, kind,
-      time: new Date().toLocaleString()
-    });
-    state.history = state.history.slice(0, 100);
+  function numberInput(id) {
+    const value = Number($(id).value);
+    return Number.isFinite(value) ? Math.floor(value) : 0;
   }
 
-  function safe(value) {
-    return String(value).replace(/[&<>"']/g, c => ({
-      "&":"&amp;", "<":"&lt;", ">":"&gt;",
-      '"':"&quot;", "'":"&#39;"
-    }[c]));
+  function moneyText(value) {
+    return "$" + Number(value).toFixed(2).replace(/\.00$/, "");
+  }
+
+  function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    })[char]);
+  }
+
+  function totalMinutes() {
+    return state.paidMinutes + state.freeMinutes;
   }
 
   function render() {
+    $("money").textContent = moneyText(state.money);
     $("points").textContent = state.points;
-    $("money").textContent = "$" + state.money;
-    $("redeemed").innerHTML =
-      state.redeemed + ' <span class="unit">min</span>';
+    $("paidMinutes").textContent = state.paidMinutes;
+    $("freeMinutes").textContent = state.freeMinutes;
+    $("totalMinutes").textContent = totalMinutes();
 
+    $("untilPoint").textContent = 5 - state.pointProgress;
     $("progressText").textContent =
-      state.pointProgress + " / 5 minutes toward your next point";
-    $("bar").style.width = (state.pointProgress / 5 * 100) + "%";
+      state.pointProgress + " of 5 minutes toward your next point";
 
-    $("history").innerHTML = state.history.length
-      ? state.history.map(item => `
-        <div class="history-row">
-          <div>
-            <strong>${safe(item.title)}</strong>
-            <small>${safe(item.detail)} · ${safe(item.time)}</small>
-          </div>
-          <div class="amount ${item.kind === "minus" ? "minus" : "plus"}">
-            ${item.amount ? (item.kind === "minus" ? "−" : "+") + item.amount : ""}
-          </div>
-        </div>
-      `).join("")
-      : '<div class="empty">No activity yet!</div>';
+    $("progressFill").style.width =
+      (state.pointProgress / 5 * 100) + "%";
 
     $("undoBtn").disabled = state.undoStack.length === 0;
-    save();
+
+    renderHistory();
+    updatePreview();
   }
 
-  $("addBtn").addEventListener("click", () => {
-    const n = Number($("addMinutes").value);
+  function renderHistory() {
+    const history = $("history");
 
-    if (!Number.isSafeInteger(n) || n < 1)
-      return alert("Enter a whole number of minutes.");
+    if (!state.history.length) {
+      history.innerHTML =
+        '<div class="empty">No massages recorded yet.</div>';
+      return;
+    }
 
-    remember();
+    history.innerHTML = state.history
+      .slice()
+      .reverse()
+      .map(item => {
+        const date = new Date(item.date).toLocaleString();
 
-    state.paidMinutes += n;
-    state.money += n;
+        return `
+          <div class="history-item">
+            <div>
+              <strong>${escapeHTML(item.title)}</strong>
+              <p>${escapeHTML(date)}</p>
+              <p>
+                ${item.paid} paid min · ${item.free} free min ·
+                ${item.pointsSpent} points used ·
+                ${item.pointsEarned} points earned
+              </p>
+            </div>
+            <div class="history-amount green">
+              ${moneyText(item.earned)}
+            </div>
+          </div>
+        `;
+      }).join("");
+  }
 
-    // Every 5 massage minutes earns one point.
-    state.pointProgress += n;
-    const earned = Math.floor(state.pointProgress / 5);
-    state.pointProgress %= 5;
-    state.points += earned;
+  function updatePreview() {
+    const length = numberInput("massageLength");
+    const requested = numberInput("pointsToUse");
 
-    log(
-      "Massage added",
-      n + " minutes · +" + earned + " points · +$" + n,
-      n,
-      "plus"
+    if (length <= 0) {
+      $("preview").textContent =
+        "Enter a massage length to see the breakdown.";
+      return;
+    }
+
+    const pointsSpent = Math.min(
+      Math.max(0, requested),
+      state.points,
+      length
     );
 
+    const free = pointsSpent;
+    const paid = length - free;
+    const earned = paid;
+
+    $("preview").innerHTML = `
+      Total massage: <strong>${length} minutes</strong><br>
+      Free minutes: <strong>${free}</strong><br>
+      Paid minutes: <strong>${paid}</strong><br>
+      Money earned: <strong>${moneyText(earned)}</strong><br>
+      Points spent: <strong>${pointsSpent}</strong><br>
+      New points earned from paid minutes:
+      <strong>${Math.floor((state.pointProgress + paid) / 5)}</strong>
+    `;
+
+    if (requested > state.points) {
+      $("preview").innerHTML +=
+        '<br><span style="color:#ffca75">You do not have that many points. The free minutes are limited to your available points.</span>';
+    }
+
+    if (requested > length) {
+      $("preview").innerHTML +=
+        '<br><span style="color:#ffca75">Points used cannot exceed the massage length.</span>';
+    }
+  }
+
+  function addMassage() {
+    const length = numberInput("massageLength");
+    const requested = numberInput("pointsToUse");
+
+    if (length < 1) {
+      alert("Enter a massage length of at least 1 minute.");
+      return;
+    }
+
+    if (length > 100000) {
+      alert("Please enter a smaller massage length.");
+      return;
+    }
+
+    if (requested < 0) {
+      alert("Points used cannot be negative.");
+      return;
+    }
+
+    state.undoStack.push(JSON.stringify({
+      money: state.money,
+      paidMinutes: state.paidMinutes,
+      freeMinutes: state.freeMinutes,
+      points: state.points,
+      pointProgress: state.pointProgress,
+      history: state.history
+    }));
+
+    // Each point pays for one minute, up to the massage length.
+    const pointsSpent = Math.min(requested, state.points, length);
+    const free = pointsSpent;
+    const paid = length - free;
+
+    // Only paid minutes earn money and reward progress.
+    const earned = paid;
+
+    state.points -= pointsSpent;
+    state.freeMinutes += free;
+    state.paidMinutes += paid;
+    state.money += earned;
+
+    // Carry progress over between massages.
+    const combinedProgress = state.pointProgress + paid;
+    const pointsEarned = Math.floor(combinedProgress / 5);
+    state.pointProgress = combinedProgress % 5;
+    state.points += pointsEarned;
+
+    state.history.push({
+      id: Date.now(),
+      date: new Date().toISOString(),
+      title: length + "-minute massage",
+      total: length,
+      paid,
+      free,
+      pointsSpent,
+      pointsEarned,
+      earned
+    });
+
+    saveState();
+
+    $("massageLength").value = "";
+    $("pointsToUse").value = "0";
+
     render();
-  });
 
-  $("redeemBtn").addEventListener("click", () => {
-    const n = Number($("redeemPoints").value);
-
-    if (!Number.isSafeInteger(n) || n < 1)
-      return alert("Enter a whole number of points.");
-
-    if (n > state.points)
-      return alert("Not enough points! You have " + state.points + ".");
-
-    remember();
-
-    state.points -= n;
-    state.redeemed += n;
-
-    log(
-      "Points redeemed",
-      n + " points exchanged for " + n + " free minutes",
-      n,
-      "minus"
+    alert(
+      "Massage saved!\n\n" +
+      "Free minutes: " + free + "\n" +
+      "Paid minutes: " + paid + "\n" +
+      "Money earned: " + moneyText(earned) + "\n" +
+      "Points spent: " + pointsSpent + "\n" +
+      "New points earned: " + pointsEarned + "\n" +
+      "Points now available: " + state.points
     );
+  }
 
+  function undoLast() {
+    if (!state.undoStack.length) {
+      alert("There is no massage to undo.");
+      return;
+    }
+
+    const previous = JSON.parse(state.undoStack.pop());
+
+    state.money = previous.money;
+    state.paidMinutes = previous.paidMinutes;
+    state.freeMinutes = previous.freeMinutes;
+    state.points = previous.points;
+    state.pointProgress = previous.pointProgress;
+    state.history = previous.history;
+
+    saveState();
     render();
-  });
+  }
 
-  $("undoBtn").addEventListener("click", () => {
-    if (!state.undoStack.length) return;
+  function exportBackup() {
+    const backup = {
+      app: "Massage Tracker",
+      version: 2,
+      exportedAt: new Date().toISOString(),
+      state
+    };
 
-    const old = state.undoStack.pop();
-    state.paidMinutes = old.paidMinutes;
-    state.money = old.money;
-    state.points = old.points;
-    state.pointProgress = old.pointProgress;
-    state.redeemed = old.redeemed;
-    state.history = old.history;
-
-    render();
-  });
-
-  $("clearBtn").addEventListener("click", () => {
-    if (!confirm("Reset all totals and history? Export a backup first if needed.")) return;
-
-    remember();
-    state.paidMinutes = 0;
-    state.money = 0;
-    state.points = 0;
-    state.pointProgress = 0;
-    state.redeemed = 0;
-    state.history = [];
-
-    render();
-  });
-
-  $("exportBtn").addEventListener("click", () => {
-    const { undoStack, ...data } = state;
     const blob = new Blob(
-      [JSON.stringify(data, null, 2)],
+      [JSON.stringify(backup, null, 2)],
       { type: "application/json" }
     );
 
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
+
     a.href = url;
     a.download = "massage-tracker-backup.json";
     a.click();
+
     URL.revokeObjectURL(url);
-  });
+  }
 
-  $("importBtn").addEventListener("click", () => $("importFile").click());
-
-  $("importFile").addEventListener("change", async e => {
-    const file = e.target.files[0];
+  function importBackup(file) {
     if (!file) return;
 
-    try {
-      const data = JSON.parse(await file.text());
+    const reader = new FileReader();
 
-      if (!Number.isSafeInteger(data.paidMinutes) || data.paidMinutes < 0 ||
-          !Number.isFinite(data.money) || data.money < 0 ||
-          !Number.isSafeInteger(data.points) || data.points < 0 ||
-          !Number.isSafeInteger(data.pointProgress) ||
-          data.pointProgress < 0 || data.pointProgress > 4 ||
-          !Number.isSafeInteger(data.redeemed) || data.redeemed < 0 ||
-          !Array.isArray(data.history)) {
-        throw new Error("Invalid backup");
+    reader.onload = () => {
+      try {
+        const backup = JSON.parse(reader.result);
+        const imported = backup.state || backup;
+
+        const valid =
+          imported &&
+          Number.isFinite(imported.money) &&
+          Number.isFinite(imported.paidMinutes) &&
+          Number.isFinite(imported.freeMinutes) &&
+          Number.isFinite(imported.points) &&
+          Number.isFinite(imported.pointProgress) &&
+          Array.isArray(imported.history);
+
+        if (!valid) {
+          throw new Error("That file does not look like a valid backup.");
+        }
+
+        if (!confirm("Import this backup? Your current tracker data will be replaced.")) {
+          return;
+        }
+
+        state = {
+          ...structuredClone(defaultState),
+          ...imported,
+          history: imported.history,
+          undoStack: []
+        };
+
+        saveState();
+        render();
+        alert("Backup imported successfully!");
+      } catch (error) {
+        alert("Could not import backup: " + error.message);
+      } finally {
+        $("importFile").value = "";
       }
+    };
 
-      remember();
-      state.paidMinutes = data.paidMinutes;
-      state.money = data.money;
-      state.points = data.points;
-      state.pointProgress = data.pointProgress;
-      state.redeemed = data.redeemed;
-      state.history = data.history.slice(0, 100);
+    reader.readAsText(file);
+  }
 
-      render();
-      alert("Backup imported successfully!");
-    } catch (err) {
-      alert("That backup file is invalid.");
-    }
+  function resetAll() {
+    const first = confirm(
+      "Reset ALL massage data, money, points, and history?"
+    );
 
-    e.target.value = "";
+    if (!first) return;
+
+    const second = confirm(
+      "Are you sure? Export a backup first if you want to keep your data."
+    );
+
+    if (!second) return;
+
+    state = structuredClone(defaultState);
+    saveState();
+    render();
+  }
+
+  $("addMassage").addEventListener("click", addMassage);
+  $("undoBtn").addEventListener("click", undoLast);
+  $("exportBtn").addEventListener("click", exportBackup);
+  $("importBtn").addEventListener("click", () => $("importFile").click());
+  $("importFile").addEventListener("change", event => {
+    importBackup(event.target.files[0]);
   });
+  $("resetBtn").addEventListener("click", resetAll);
+
+  $("massageLength").addEventListener("input", updatePreview);
+  $("pointsToUse").addEventListener("input", updatePreview);
+
+  // Save the tracker whenever its state changes.
+  window.addEventListener("beforeunload", saveState);
 
   render();
 })();
